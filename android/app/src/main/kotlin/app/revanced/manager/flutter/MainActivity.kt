@@ -174,7 +174,7 @@ class MainActivity : FlutterActivity() {
                             javaClass.classLoader
                         )
                     ).loadPatches().filter { patch ->
-                        patch.compatiblePackages!!.any { it.name == patcher.context.packageMetadata.packageName } &&
+                        (patch.compatiblePackages?.any { it.name == patcher.context.packageMetadata.packageName } == true || patch.compatiblePackages.isNullOrEmpty()) &&
                                 selectedPatches.any { it == patch.patchName }
                     }
                 } else {
@@ -183,7 +183,7 @@ class MainActivity : FlutterActivity() {
                 patcher.addPatches(patches)
                 patcher.executePatches().forEach { (patch, res) ->
                     if (res.isSuccess) {
-                        val msg = "[Applied] $patch"
+                        val msg = "[Applied] $patch""
                         handler.post {
                             installerChannel.invokeMethod(
                                 "update",
@@ -196,7 +196,7 @@ class MainActivity : FlutterActivity() {
                         }
                         return@forEach
                     }
-                    val msg = "$patch failed.\nError:\n" + res.exceptionOrNull()!!.printStackTrace()
+                    val msg = "[Failed] $patch: " + "${res.exceptionOrNull()!!.message ?: res.exceptionOrNull()!!.cause!!::class.simpleName}"
                     handler.post {
                         installerChannel.invokeMethod(
                             "update",
@@ -245,7 +245,7 @@ class MainActivity : FlutterActivity() {
                     )
                 }
 
-                // Signer("Nibir", "150298").signApk(patchedFile, outFile, keyStoreFile)
+                // Signer(Nibir", "150298").signApk(patchedFile, outFile, keyStoreFile)
 
                 try {
                     Signer("Nibir", "150298").signApk(patchedFile, outFile, keyStoreFile)
