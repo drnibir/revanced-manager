@@ -183,7 +183,7 @@ class MainActivity : FlutterActivity() {
                 patcher.addPatches(patches)
                 patcher.executePatches().forEach { (patch, res) ->
                     if (res.isSuccess) {
-                        val msg = "[Applied] $patch""
+                        val msg = "[Applied] $patch"
                         handler.post {
                             installerChannel.invokeMethod(
                                 "update",
