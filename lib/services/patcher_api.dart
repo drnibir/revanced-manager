@@ -50,7 +50,7 @@ class PatcherAPI {
         _patches = await _managerAPI.getPatches();
       }
     } on Exception catch (e, s) {
-      await Sentry.captureException(e, stackTrace: s);
+      Sentry.captureException(e, stackTrace: s).ignore();
       _patches = List.empty();
     }
   }
@@ -92,7 +92,7 @@ class PatcherAPI {
             }
           }
         } on Exception catch (e, s) {
-          await Sentry.captureException(e, stackTrace: s);
+          Sentry.captureException(e, stackTrace: s).ignore();
           continue;
         }
       }
@@ -120,25 +120,6 @@ class PatcherAPI {
     return _patches
         .where((patch) => appliedPatches.contains(patch.name))
         .toList();
-  }
-
-  bool dependencyNeedsIntegrations(String name) {
-    return name.contains('integrations') ||
-        _patches.any(
-          (patch) =>
-              patch.name == name &&
-              (patch.dependencies.any(
-                (dep) => dependencyNeedsIntegrations(dep),
-              )),
-        );
-  }
-
-  Future<bool> needsIntegrations(List<Patch> selectedPatches) async {
-    return selectedPatches.any(
-      (patch) => patch.dependencies.any(
-        (dep) => dependencyNeedsIntegrations(dep),
-      ),
-    );
   }
 
   Future<bool> needsResourcePatching(List<Patch> selectedPatches) async {
@@ -171,7 +152,7 @@ class PatcherAPI {
       }
       return originalFilePath;
     } on Exception catch (e, s) {
-      await Sentry.captureException(e, stackTrace: s);
+      Sentry.captureException(e, stackTrace: s).ignore();
       return originalFilePath;
     }
   }
@@ -181,7 +162,6 @@ class PatcherAPI {
     String originalFilePath,
     List<Patch> selectedPatches,
   ) async {
-    final bool mergeIntegrations = await needsIntegrations(selectedPatches);
     final bool includeSettings = await needsSettingsPatch(selectedPatches);
     if (includeSettings) {
       try {
@@ -194,15 +174,12 @@ class PatcherAPI {
           selectedPatches.add(settingsPatch);
         }
       } on Exception catch (e, s) {
-        await Sentry.captureException(e, stackTrace: s);
+        Sentry.captureException(e, stackTrace: s).ignore();
         // ignore
       }
     }
     final File? patchBundleFile = await _managerAPI.downloadPatches();
-    File? integrationsFile;
-    if (mergeIntegrations) {
-      integrationsFile = await _managerAPI.downloadIntegrations();
-    }
+    final File? integrationsFile = await _managerAPI.downloadIntegrations();
     if (patchBundleFile != null) {
       _dataDir.createSync();
       _tmpDir.createSync();
@@ -224,18 +201,17 @@ class PatcherAPI {
             'inputFilePath': inputFile.path,
             'patchedFilePath': patchedFile.path,
             'outFilePath': _outFile!.path,
-            'integrationsPath': mergeIntegrations ? integrationsFile!.path : '',
+            'integrationsPath': integrationsFile!.path,
             'selectedPatches': selectedPatches.map((p) => p.name).toList(),
             'cacheDirPath': cacheDir.path,
-            'mergeIntegrations': mergeIntegrations,
             'keyStoreFilePath': _keyStoreFile.path,
           },
         );
-      } on Exception catch (e, s) {
+      } on Exception catch (e) {
         if (kDebugMode) {
           print(e);
         }
-        throw await Sentry.captureException(e, stackTrace: s);
+        rethrow;
       }
     }
   }
@@ -257,7 +233,7 @@ class PatcherAPI {
           return await DeviceApps.isAppInstalled(patchedApp.packageName);
         }
       } on Exception catch (e, s) {
-        await Sentry.captureException(e, stackTrace: s);
+        Sentry.captureException(e, stackTrace: s).ignore();
         return false;
       }
     }
@@ -268,11 +244,15 @@ class PatcherAPI {
     try {
       if (_outFile != null) {
         final String newName = _getFileName(appName, version);
-        CRFileSaver.saveFileWithDialog(SaveFileDialogParams(
-            sourceFilePath: _outFile!.path, destinationFileName: newName,),);
+        CRFileSaver.saveFileWithDialog(
+          SaveFileDialogParams(
+            sourceFilePath: _outFile!.path,
+            destinationFileName: newName,
+          ),
+        );
       }
     } on Exception catch (e, s) {
-      Sentry.captureException(e, stackTrace: s);
+      Sentry.captureException(e, stackTrace: s).ignore();
     }
   }
 
@@ -287,7 +267,7 @@ class PatcherAPI {
         ShareExtend.share(shareFile.path, 'file');
       }
     } on Exception catch (e, s) {
-      Sentry.captureException(e, stackTrace: s);
+      Sentry.captureException(e, stackTrace: s).ignore();
     }
   }
 
