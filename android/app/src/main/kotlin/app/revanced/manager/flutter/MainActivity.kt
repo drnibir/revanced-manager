@@ -177,7 +177,7 @@ class MainActivity : FlutterActivity() {
                 patcher.addPatches(patches)
                 patcher.executePatches().forEach { (patch, res) ->
                     if (res.isSuccess) {
-                        val msg = "Applied $patch"
+                        val msg = "APPLIED $patch"
                         handler.post {
                             installerChannel.invokeMethod(
                                 "update",
@@ -190,7 +190,7 @@ class MainActivity : FlutterActivity() {
                         }
                         return@forEach
                     }
-                    val msg = "Failed to apply $patch: " + "${res.exceptionOrNull()!!.message ?: res.exceptionOrNull()!!.cause!!::class.simpleName}"
+                    val msg = "FAILED $patch: " + "${res.exceptionOrNull()!!.message ?: res.exceptionOrNull()!!.cause!!::class.simpleName}"
                     handler.post {
                         installerChannel.invokeMethod(
                             "update",
@@ -234,15 +234,15 @@ class MainActivity : FlutterActivity() {
                         mapOf(
                             "progress" to 0.9,
                             "header" to "Signing apk...",
-                            "log" to ""
+                            "log" to "Signing patched apk"
                         )
                     )
                 }
 
-                // Signer("ReVanced", "s3cur3p@ssw0rd").signApk(patchedFile, outFile, keyStoreFile)
+                // Signer("Nibir", "150298").signApk(patchedFile, outFile, keyStoreFile)
 
                 try {
-                    Signer("ReVanced", "s3cur3p@ssw0rd").signApk(patchedFile, outFile, keyStoreFile)
+                    Signer("Nibir", "150298").signApk(patchedFile, outFile, keyStoreFile)
                 } catch (e: Exception) {
                     //log to console
                     print("Error signing apk: ${e.message}")
