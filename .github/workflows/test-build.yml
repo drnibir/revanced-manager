@@ -13,12 +13,20 @@ jobs:
       - name: Set up JDK 12
         uses: actions/setup-java@v3
         with:
-          java-version: '12'
+          java-version: '17'
           distribution: 'zulu'
-      - uses: subosito/flutter-action@v2
+          cache: 'gradle'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-      - name: Set up Flutter
+          cache: true
+      - name: Install Flutter dependencies
         run: flutter pub get
       - name: Generate files with Builder
         run: flutter packages pub run build_runner build --delete-conflicting-outputs
