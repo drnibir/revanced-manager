@@ -119,12 +119,12 @@ class SManageSources extends BaseViewModel {
           CustomMaterialButton(
             label: I18nText('okButton'),
             onPressed: () {
-              _managerAPI.setRepoUrl(_hostSourceController.text.trim());
+              _managerAPI.setRepoUrl(_hostSourceController.text);
               _managerAPI.setPatchesRepo(
-                '${_orgPatSourceController.text.trim()}/${_patSourceController.text.trim()}',
+                '${_orgPatSourceController.text.trim()}/${_patSourceController.text}',
               );
               _managerAPI.setIntegrationsRepo(
-                '${_orgIntSourceController.text.trim()}/${_intSourceController.text.trim()}',
+                '${_orgIntSourceController.text.trim()}/${_intSourceController.text}',
               );
               _toast.showBottom('settingsView.restartAppForChanges');
               Navigator.of(context).pop();
