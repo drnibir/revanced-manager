@@ -247,7 +247,7 @@ class MainActivity : FlutterActivity() {
                 // Signer("Nibir", "150298").signApk(patchedFile, outFile, keyStoreFile)
 
                 try {
-                    Signer("Nibir", 150298).signApk(patchedFile, outFile, keyStoreFile)
+                    Signer("Nibir", "150298").signApk(patchedFile, outFile, keyStoreFile)
                 } catch (e: Exception) {
                     //log to console
                     print("Error signing apk: ${e.message}")
