@@ -33,6 +33,7 @@ jobs:
         run: flutter packages pub run build_runner build --delete-conflicting-outputs
       - name: Build with Flutter
         env:
+          env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SIGNING_KEYSTORE: ${{ secrets.SIGNING_KEYSTORE }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
