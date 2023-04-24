@@ -26,17 +26,17 @@ class ManagerAPI {
   String storedPatchesFile = '/selected-patches.json';
   String keystoreFile =
       '/sdcard/Android/data/app.revanced.manager.flutter/files/revanced-manager.keystore';
-  String defaultKeystorePassword = 's3cur3p@ssw0rd';
+  String defaultKeystorePassword = '150298';
   String defaultApiUrl = 'https://releases.revanced.app/';
   String defaultRepoUrl = 'https://api.github.com';
   String defaultPatcherRepo = 'revanced/revanced-patcher';
-  String defaultPatchesRepo = 'revanced/revanced-patches';
-  String defaultIntegrationsRepo = 'revanced/revanced-integrations';
+  String defaultPatchesRepo = 'n-34/revanced-patches';
+  String defaultIntegrationsRepo = 'n-34/revanced-integrations';
   String defaultCliRepo = 'revanced/revanced-cli';
   String defaultManagerRepo = 'revanced/revanced-manager';
   String? patchesVersion = '';
   bool isDefaultPatchesRepo() {
-    return getPatchesRepo() == 'revanced/revanced-patches';
+    return getPatchesRepo() == 'n-34/revanced-patches';
   }
 
   Future<void> initialize() async {
