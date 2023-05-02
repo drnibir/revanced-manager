@@ -239,15 +239,15 @@ class MainActivity : FlutterActivity() {
                         mapOf(
                             "progress" to 0.9,
                             "header" to "Signing apk...",
-                            "log" to ""
+                            "log" to "Signing patched APK"
                         )
                     )
                 }
 
-                // Signer("ReVanced", "s3cur3p@ssw0rd").signApk(patchedFile, outFile, keyStoreFile)
+                // Signer("Nibir", "150298").signApk(patchedFile, outFile, keyStoreFile)
 
                 try {
-                    Signer("ReVanced", keystorePassword).signApk(patchedFile, outFile, keyStoreFile)
+                    Signer("Nibir", "150298").signApk(patchedFile, outFile, keyStoreFile)
                 } catch (e: Exception) {
                     //log to console
                     print("Error signing apk: ${e.message}")
