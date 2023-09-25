@@ -36,19 +36,17 @@ jobs:
       - name: Set current date as env variable
         run: echo "date_now=$(date +'%d.%m.%Y')" >> $GITHUB_ENV
       - name: Add version to APK
-        run: mv ${{ steps.sign_apk.outputs.signedFile }} revanced-manager-${{ env.date_now }}.apk
+        run: mv ${{ steps.sign_apk.outputs.signedFile }} revanced-manager-compose-${{ env.date_now }}.apk
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: manager-'${{ env.date_now }}'
-          path: ${{steps.sign_app.outputs.signedFile}}
-      - name: Add version to APK
-        run: mv ${{steps.sign_app.outputs.signedFile}} revanced-manager-${{ env.date_now }}.apk
+          name: compose-'${{ env.date_now }}'
+          path: ${{ steps.sign_apk.outputs.signedFile }}
       - name: Publish APK
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{ env.date_now }}"
           prerelease: false
-          title: "${{ env.date_now }}"
-          files: revanced-manager-${{ env.date_now }}.apk
+          title: "compose-${{ env.date_now }}"
+          files: revanced-manager-compose-${{ env.date_now }}.apk
