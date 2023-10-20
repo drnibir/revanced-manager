@@ -2,6 +2,7 @@ package app.revanced.manager.util
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -12,7 +13,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
@@ -21,6 +25,8 @@ import java.util.Locale
 
 typealias PatchesSelection = Map<Int, Set<String>>
 typealias Options = Map<Int, Map<String, Map<String, Any?>>>
+
+val Context.isDebuggable get() = 0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
 
 fun Context.openUrl(url: String) {
     startActivity(Intent(Intent.ACTION_VIEW, url.toUri()).apply {
@@ -41,16 +47,21 @@ fun Context.toast(string: String, duration: Int = Toast.LENGTH_SHORT) {
  * @param logMsg The log message.
  * @param block The code to execute.
  */
+@OptIn(DelicateCoroutinesApi::class)
 inline fun uiSafe(context: Context, @StringRes toastMsg: Int, logMsg: String, block: () -> Unit) {
     try {
         block()
     } catch (error: Exception) {
-        context.toast(
-            context.getString(
-                toastMsg,
-                error.simpleMessage()
+        // You can only toast on the main thread.
+        GlobalScope.launch(Dispatchers.Main) {
+            context.toast(
+                context.getString(
+                    toastMsg,
+                    error.simpleMessage()
+                )
             )
-        )
+        }
+
         Log.e(tag, logMsg, error)
     }
 }
