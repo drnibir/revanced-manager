@@ -166,6 +166,7 @@
     <string name="unsupported_patches">Unsupported patches</string>
     <string name="universal_patches">Universal patches</string>
     <string name="patch_selection_reset_toast">Patch selection and options has been reset to recommended defaults</string>
+    <string name="patch_options_reset_toast">Patch options have been reset</string>
     <string name="selection_warning_title">Stop using defaults?</string>
     <string name="selection_warning_description">You may encounter issues when not using the default patch selection and options.</string>
     <string name="selection_warning_continue_countdown">Continue (%ds)</string>
@@ -272,6 +273,8 @@
     <string name="developer_options_description">Options for debugging issues</string>
     <string name="bundle_input_name">Name</string>
     <string name="bundle_input_source_url">Source URL</string>
+    <string name="bundle_update_success">Successfully updated %s</string>
+    <string name="bundle_update_unavailable">No update available for %s</string>
     <string name="automatically_update">Automatically update</string>
     <string name="automatically_update_description">Automatically update this bundle when ReVanced starts</string>
     <string name="bundle_type">Bundle type</string>
